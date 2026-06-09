@@ -8,7 +8,6 @@ function GameRoom({ socket, roomId, playerName }) {
   const [players, setPlayers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [gameStatus, setGameStatus] = useState('waiting');
-  const [currentDrawer, setCurrentDrawer] = useState(null);
   const [drawerId, setDrawerId] = useState(null);
   const [currentWord, setCurrentWord] = useState('');
   const [round, setRound] = useState(0);

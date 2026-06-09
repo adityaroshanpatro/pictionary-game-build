@@ -37,7 +37,6 @@ function GameRoom({ socket, roomId, playerName }) {
     socket.on('round-start', ({ round, maxRounds, drawer, drawerId }) => {
       setRound(round);
       setMaxRounds(maxRounds);
-      setCurrentDrawer(drawer);
       setDrawerId(drawerId);
       setGameStatus('playing');
       setTimeLeft(80);

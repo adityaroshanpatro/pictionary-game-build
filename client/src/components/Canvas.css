@@ -1,0 +1,104 @@
+.canvas-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.drawing-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  align-items: center;
+}
+
+.tool-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tool-section label {
+  font-weight: 600;
+  color: #555;
+}
+
+.tool-section button {
+  padding: 8px 16px;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+}
+
+.tool-section button:hover {
+  border-color: #667eea;
+}
+
+.tool-section button.active {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.color-palette {
+  display: flex;
+  gap: 5px;
+}
+
+.color-btn {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.color-btn:hover {
+  transform: scale(1.1);
+}
+
+.color-btn.active {
+  border: 3px solid #667eea;
+  transform: scale(1.2);
+}
+
+.clear-btn {
+  padding: 8px 20px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.clear-btn:hover {
+  background: #d32f2f;
+}
+
+.drawing-canvas {
+  border: 3px solid #ddd;
+  border-radius: 10px;
+  background: white;
+  cursor: crosshair;
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.drawing-canvas.view-only {
+  cursor: default;
+  background: #fafafa;
+}
+
+input[type="range"] {
+  width: 100px;
+}

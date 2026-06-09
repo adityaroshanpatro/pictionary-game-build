@@ -1,0 +1,85 @@
+.guess-input {
+  display: flex;
+  gap: 10px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.guess-input input {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.guess-input input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.guess-input button {
+  padding: 10px 20px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.guess-input button:hover {
+  background: #5568d3;
+}
+
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 500px;
+}
+
+.message {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #f8f9fa;
+}
+
+.message.system {
+  background: #e3f2fd;
+  color: #1976d2;
+  font-weight: 500;
+  text-align: center;
+}
+
+.message.correct {
+  background: #c8e6c9;
+  color: #2e7d32;
+  font-weight: 600;
+  text-align: center;
+}
+
+.message.guess {
+  background: #fff3e0;
+}
+
+.message .sender {
+  font-weight: 600;
+  margin-right: 5px;
+  color: #667eea;
+}
+
+.message .text {
+  color: #333;
+}

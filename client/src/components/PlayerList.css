@@ -1,0 +1,63 @@
+.player-list {
+  height: 100%;
+}
+
+.player-list h3 {
+  color: #667eea;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.players {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.player-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.player-item.drawing {
+  background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.player-rank {
+  font-weight: bold;
+  color: #667eea;
+  font-size: 1.1rem;
+  min-width: 30px;
+}
+
+.player-item.drawing .player-rank {
+  color: white;
+}
+
+.player-name {
+  font-weight: 600;
+}
+
+.player-score {
+  font-weight: bold;
+  color: #4caf50;
+  font-size: 1.1rem;
+}
+
+.player-item.drawing .player-score {
+  color: white;
+}

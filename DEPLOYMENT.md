@@ -1,25 +1,60 @@
-# Deployment Guide
+# Deployment Guide - Pictionary Game 🎨
 
-## Option 1: Railway (Recommended - Easy)
+## Quick Start: Render (Recommended - 100% Free) ⭐
 
-1. Sign up at https://railway.app
+**Why Render?**
+- ✅ Completely free tier (750 hours/month)
+- ✅ Native WebSocket support
+- ✅ Zero configuration needed
+- ✅ Auto-deploy from GitHub
+- ✅ Free SSL certificate
+
+### Steps:
+
+1. **Push your code to GitHub** (if not already):
+   ```bash
+   git add .
+   git commit -m "Ready for deployment"
+   git push origin main
+   ```
+
+2. **Deploy on Render**:
+   - Go to [https://render.com](https://render.com)
+   - Sign up with your GitHub account (free)
+   - Click "New +" → "Web Service"
+   - Connect your repository
+   - Render will automatically detect `render.yaml` configuration
+   - Click "Apply" 
+   - Wait 3-5 minutes for build and deployment
+
+3. **Done!** 🎉 
+   - Your app will be live at: `https://your-app-name.onrender.com`
+   - Share the link with friends to play!
+
+**Note**: Free tier services sleep after 15 minutes of inactivity. First request may take 30-60 seconds to wake up.
+
+---
+
+## Option 2: Railway
+
+1. Sign up at https://railway.app (free)
 2. Click "New Project" → "Deploy from GitHub repo"
 3. Select this repository
-4. Railway will auto-detect and deploy
-5. Add environment variables:
-   - `NODE_ENV=production`
-   - `CLIENT_URL=https://your-railway-app.up.railway.app`
-6. Your app will be live at the Railway URL
+4. Set environment variable: `NODE_ENV=production`
+5. Railway will auto-detect and deploy
 
-## Option 2: Render
+**Free tier**: $5 credit/month
 
-1. Sign up at https://render.com
-2. Click "New" → "Web Service"
-3. Connect your GitHub repository
-4. Render will use `render.yaml` config automatically
-5. Add environment variable in dashboard:
-   - `CLIENT_URL=https://your-app.onrender.com`
-6. Deploy!
+---
+
+## Option 3: Fly.io
+
+1. Install Fly CLI: `curl -L https://fly.io/install.sh | sh`
+2. Login: `fly auth login`
+3. Launch: `fly launch` (follow prompts)
+4. Deploy: `fly deploy`
+
+**Free tier**: 3 small VMs
 
 ## Option 3: Heroku
 
@@ -63,26 +98,35 @@ Frontend runs on: http://localhost:3000
 
 ## Environment Variables
 
-### Backend (.env)
+**Good news!** For production deployment, NO environment variables are required! 🎉
+
+The app automatically:
+- Uses the hosting platform's PORT (or defaults to 5000)
+- Sets WebSocket URL to `window.location.origin` in production
+- Serves React static files from the same origin
+
+### For local development only:
+
+Backend: Create `.env` in project root (optional):
 ```
 PORT=5000
-CLIENT_URL=http://localhost:3000
-NODE_ENV=development
 ```
 
-### Frontend (client/.env)
+Frontend: Already configured in `client/.env`:
 ```
 REACT_APP_SOCKET_URL=http://localhost:5000
 ```
 
 ## Production Checklist
 
-- [ ] Set `NODE_ENV=production`
-- [ ] Set correct `CLIENT_URL` (your deployed frontend URL)
-- [ ] Set `REACT_APP_SOCKET_URL` to your deployed backend URL
-- [ ] Test with multiple users
-- [ ] Check WebSocket connections work
-- [ ] Monitor performance
+- [x] WebSocket auto-configuration ✅
+- [x] Static file serving ✅
+- [x] CORS settings ✅
+- [x] Build scripts configured ✅
+- [ ] Push code to GitHub
+- [ ] Deploy on Render (or other platform)
+- [ ] Test with multiple browser windows
+- [ ] Share link with friends!
 
 ## Troubleshooting
 

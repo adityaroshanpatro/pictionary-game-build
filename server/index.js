@@ -20,6 +20,11 @@ app.use(express.json());
 // Serve static files from React build in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
+
+  // Catch-all route to serve React app
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  });
 }
 
 // Game state
@@ -43,7 +48,8 @@ function createGame(roomId) {
     roundDuration: 80000, // 80 seconds
     guessedPlayers: new Set(),
     drawingData: [],
-    status: 'waiting' // waiting, playing, finished
+    status: 'waiting', // waiting, playing, finished
+    roundTimer: null
   };
 }
 
@@ -61,6 +67,12 @@ function calculatePoints(timeElapsed, roundDuration) {
 function nextTurn(game) {
   game.guessedPlayers.clear();
   game.drawingData = [];
+
+  // Clear any existing round timer
+  if (game.roundTimer) {
+    clearTimeout(game.roundTimer);
+    game.roundTimer = null;
+  }
 
   if (game.currentDrawer === null) {
     game.currentDrawer = 0;
@@ -82,6 +94,53 @@ function nextTurn(game) {
   game.status = 'playing';
 
   return true;
+}
+
+function checkAllPlayersGuessed(game) {
+  // Number of players who should be guessing (everyone except the drawer)
+  const guessersCount = game.players.length - 1;
+  // Number of players who have guessed correctly
+  const guessedCount = game.guessedPlayers.size;
+
+  return guessedCount >= guessersCount;
+}
+
+function endRound(game, roomId, io) {
+  // Clear the round timer if it exists
+  if (game.roundTimer) {
+    clearTimeout(game.roundTimer);
+    game.roundTimer = null;
+  }
+
+  io.to(roomId).emit('round-end', {
+    word: game.currentWord,
+    players: game.players
+  });
+
+  setTimeout(() => {
+    if (nextTurn(game)) {
+      const nextDrawer = game.players[game.currentDrawer];
+
+      // Set up the new round timer
+      game.roundTimer = setTimeout(() => {
+        if (game.status === 'playing') {
+          endRound(game, roomId, io);
+        }
+      }, game.roundDuration);
+
+      io.to(roomId).emit('round-start', {
+        round: game.round + 1,
+        maxRounds: game.maxRounds,
+        drawer: nextDrawer.name,
+        drawerId: nextDrawer.id
+      });
+      io.to(nextDrawer.id).emit('your-word', { word: game.currentWord });
+    } else {
+      io.to(roomId).emit('game-end', {
+        players: game.players.sort((a, b) => b.score - a.score)
+      });
+    }
+  }, 5000);
 }
 
 io.on('connection', (socket) => {
@@ -143,29 +202,10 @@ io.on('connection', (socket) => {
 
       io.to(drawer.id).emit('your-word', { word: game.currentWord });
 
-      setTimeout(() => {
+      // Set up the round timer
+      game.roundTimer = setTimeout(() => {
         if (game.status === 'playing') {
-          io.to(roomId).emit('round-end', {
-            word: game.currentWord,
-            players: game.players
-          });
-
-          setTimeout(() => {
-            if (nextTurn(game)) {
-              const nextDrawer = game.players[game.currentDrawer];
-              io.to(roomId).emit('round-start', {
-                round: game.round + 1,
-                maxRounds: game.maxRounds,
-                drawer: nextDrawer.name,
-                drawerId: nextDrawer.id
-              });
-              io.to(nextDrawer.id).emit('your-word', { word: game.currentWord });
-            } else {
-              io.to(roomId).emit('game-end', {
-                players: game.players.sort((a, b) => b.score - a.score)
-              });
-            }
-          }, 5000);
+          endRound(game, roomId, io);
         }
       }, game.roundDuration);
     }
@@ -215,6 +255,12 @@ io.on('connection', (socket) => {
       });
 
       socket.emit('you-guessed-correct', { points });
+
+      // Check if all players have guessed correctly
+      if (checkAllPlayersGuessed(game)) {
+        // End the round early since everyone guessed
+        endRound(game, roomId, io);
+      }
     }
   });
 
